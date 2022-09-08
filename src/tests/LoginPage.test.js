@@ -1,9 +1,8 @@
 import { screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import {createMemoryHistory} from 'history'
 import React from 'react';
-import App from '../../App';
-import renderWithRouterAndRedux from '../helpers/renderWithRouterAndRedux';
+import App from '../App';
+import renderWithRouterAndRedux from './helpers/renderWithRouterAndRedux';
 
 const TEST_EMAIL = 'email@teste.com';
 const TEST_NAME = 'Nome de exemplo';
