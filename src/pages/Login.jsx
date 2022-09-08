@@ -1,4 +1,8 @@
+import PropTypes from 'prop-types';
 import React, { Component } from 'react';
+import apiToken from '../services/apiToken';
+
+const MINIMO_LENGTH = 3;
 
 class Login extends Component {
   state = {
@@ -15,18 +19,33 @@ class Login extends Component {
 
   validationButton = () => {
     const { email, name } = this.state;
-    console.log(email, name);
     const isDisabled = !(email.length > 0 && name.length > 0);
     this.setState({ isDisabled });
+  };
+
+  submitForm = async (event) => {
+    event.preventDefault();
+    try {
+      const token = await apiToken();
+      if (token.length < MINIMO_LENGTH) {
+        throw new Error('Token expirado.');
+      }
+      localStorage.setItem('token', token.token);
+    } catch (error) {
+      const token = await apiToken();
+      localStorage.setItem('token', token.token);
+    }
+    const { history } = this.props;
+    history.push('/game');
   };
 
   render() {
     const { name, email, isDisabled } = this.state;
     return (
       <section>
-        <form>
+        <form onSubmit={ this.submitForm }>
           <input
-            type="email"
+            type="text"
             name="email"
             data-testid="input-gravatar-email"
             onChange={ this.handleChange }
@@ -42,7 +61,7 @@ class Login extends Component {
             placeholder="Qual é o seu nome?"
           />
           <button
-            type="button"
+            type="submit"
             data-testid="btn-play"
             disabled={ isDisabled }
           >
@@ -53,5 +72,11 @@ class Login extends Component {
     );
   }
 }
+
+Login.propTypes = {
+  history: PropTypes.shape({
+    push: PropTypes.func.isRequired,
+  }).isRequired,
+};
 
 export default Login;
