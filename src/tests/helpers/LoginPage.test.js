@@ -1,4 +1,4 @@
-import { render, screen } from '@testing-library/react';
+import { screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import React from 'react';
 import App from '../../App';
@@ -7,7 +7,37 @@ import renderWithRouterAndRedux from '../helpers/renderWithRouterAndRedux';
 const TEST_EMAIL = 'email@teste.com';
 const TEST_NAME = 'Nome de exemplo';
 
-describe('Testes da tela de login', () => {
+beforeEach(() => {
+  jest.spyOn(global, 'fetch').mockResolvedValue({
+    json: jest.fn().mockResolvedValue((url) => {
+      const urls = {
+        'https://opentdb.com/api_token.php?command=request': () => {
+          return simulateExpiredToken ? invalidTokenResponse : tokenResponse;
+        },
+        [`https://opentdb.com/api.php?amount=5&token=${tokenResponse.token}`]:
+          () => questionsResponse,
+        'https://opentdb.com/api.php?amount=5&token=INVALID_TOKEN': () =>
+          invalidTokenQuestionsResponse,
+      };
+
+      return Promise.resolve({
+        status: Object.keys(urls).includes(url) ? 200 : 404,
+        ok: Object.keys(urls).includes(url),
+        json: () => {
+          return Object.keys(urls).includes(url)
+            ? Promise.resolve(urls[url]())
+            : Promise.reject(new Error('Not Found'));
+        },
+      });
+    }),
+  });
+});
+
+afterEach(() => {
+  jest.restoreAllMocks();
+});
+
+describe('Requisito 1', () => {
   test('Todos os inputs recebem valores', () => {
     renderWithRouterAndRedux(<App />);
 
@@ -63,5 +93,21 @@ describe('Testes da tela de login', () => {
       userEvent.type(emailInput, TEST_EMAIL);
       expect(startBtn).not.toBeDisabled();
     });
+  });
+});
+
+describe('Requisito 2', () => {
+  test('O fetch é chamado', () => {
+    renderWithRouterAndRedux(<App />);
+
+    const startBtn = screen.getByRole('button');
+    const nameInput = screen.getByTestId('input-player-name');
+    const emailInput = screen.getByTestId('input-gravatar-email');
+
+    userEvent.type(nameInput, TEST_NAME);
+    userEvent.type(emailInput, TEST_EMAIL);
+    userEvent.click(startBtn);
+
+    expect(fetch).toHaveBeenCalled();
   });
 });
