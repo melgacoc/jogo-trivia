@@ -13,7 +13,6 @@ class ConfigurationButton extends Component {
 
   render() {
     const { isRedirect } = this.state;
-    console.log(isRedirect);
     if (isRedirect) {
       return (<Redirect to="/settings" />);
     }

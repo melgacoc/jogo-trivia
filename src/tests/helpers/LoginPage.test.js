@@ -1,5 +1,6 @@
 import { screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
+import {createMemoryHistory} from 'history'
 import React from 'react';
 import App from '../../App';
 import renderWithRouterAndRedux from '../helpers/renderWithRouterAndRedux';
@@ -58,7 +59,7 @@ describe('Requisito 1', () => {
     test('Quando apenas o email é digitado', () => {
       renderWithRouterAndRedux(<App />);
 
-      const startBtn = screen.getByRole('button');
+      const startBtn = screen.getByTestId('btn-play');
       const emailInput = screen.getByTestId('input-gravatar-email');
 
       expect(startBtn).toBeInTheDocument();
@@ -70,7 +71,7 @@ describe('Requisito 1', () => {
     test('Quando apenas o nome é digitado', () => {
       renderWithRouterAndRedux(<App />);
 
-      const startBtn = screen.getByRole('button');
+      const startBtn = screen.getByTestId('btn-play');
       const nameInput = screen.getByTestId('input-player-name');
 
       expect(startBtn).toBeInTheDocument();
@@ -82,7 +83,7 @@ describe('Requisito 1', () => {
     test('Quando todos os inputs são digitados', () => {
       renderWithRouterAndRedux(<App />);
 
-      const startBtn = screen.getByRole('button');
+      const startBtn = screen.getByTestId('btn-play');
       const nameInput = screen.getByTestId('input-player-name');
       const emailInput = screen.getByTestId('input-gravatar-email');
 
@@ -100,7 +101,7 @@ describe('Requisito 2', () => {
   test('O fetch é chamado', () => {
     renderWithRouterAndRedux(<App />);
 
-    const startBtn = screen.getByRole('button');
+    const startBtn = screen.getByTestId('btn-play');
     const nameInput = screen.getByTestId('input-player-name');
     const emailInput = screen.getByTestId('input-gravatar-email');
 
@@ -110,4 +111,15 @@ describe('Requisito 2', () => {
 
     expect(fetch).toHaveBeenCalled();
   });
+});
+
+describe('Requisito 3', () => {
+  test('Botão que leva para a tela de configurações', () => {
+    const { history } = renderWithRouterAndRedux(<App />);
+    const configBtn = screen.getByTestId('btn-settings');
+    userEvent.click(configBtn);
+    const settingsTitle = screen.getByTestId('settings-title');
+    expect(settingsTitle).toBeInTheDocument();
+    expect(history.location.pathname).toEqual('/settings');
+  })
 });
