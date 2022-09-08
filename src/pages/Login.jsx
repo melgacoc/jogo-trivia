@@ -1,5 +1,6 @@
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
+import ConfigurationButton from '../components/ConfigurationButton';
 import apiToken from '../services/apiToken';
 
 const MINIMO_LENGTH = 3;
@@ -68,6 +69,7 @@ class Login extends Component {
             Jogar
           </button>
         </form>
+        <ConfigurationButton />
       </section>
     );
   }
