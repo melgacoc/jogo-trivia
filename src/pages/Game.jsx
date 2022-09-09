@@ -19,7 +19,7 @@ class Game extends Component {
 
   async componentDidMount() {
     const questions = await apiQuestions();
-    if (!questions.length) {
+    if (questions === undefined || !questions.length) {
       localStorage.removeItem('token');
       const { history } = this.props;
       history.push('/');
