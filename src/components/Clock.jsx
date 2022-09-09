@@ -1,7 +1,7 @@
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 
-const START_COUNT = 5;
+const START_COUNT = 30;
 const DECREMENT_COUNT_SECOND = 1;
 const DECREMENT_COUNT_MILISECONDS = 1000;
 
