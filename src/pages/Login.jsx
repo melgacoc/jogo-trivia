@@ -1,6 +1,8 @@
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
+import { connect } from 'react-redux';
 import ConfigurationButton from '../components/ConfigurationButton';
+import { userAction } from '../redux/actions';
 import apiToken from '../services/apiToken';
 
 const MINIMO_LENGTH = 3;
@@ -36,7 +38,9 @@ class Login extends Component {
       const token = await apiToken();
       localStorage.setItem('token', token.token);
     }
-    const { history } = this.props;
+    const { history, dispatch } = this.props;
+    const { name, email } = this.state;
+    dispatch(userAction(name, email));
     history.push('/game');
   };
 
@@ -79,6 +83,7 @@ Login.propTypes = {
   history: PropTypes.shape({
     push: PropTypes.func.isRequired,
   }).isRequired,
+  dispatch: PropTypes.func.isRequired,
 };
 
-export default Login;
+export default connect()(Login);
