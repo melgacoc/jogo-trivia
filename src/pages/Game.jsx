@@ -29,6 +29,7 @@ class Game extends Component {
     }
   }
 
+  // https://teamtreehouse.com/community/return-mathrandom05
   shuffleArray = (answers) => answers.sort(() => Math.random() - INDEX_RANDOM);
 
   render() {
