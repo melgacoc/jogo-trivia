@@ -2,6 +2,7 @@ import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 import Header from '../components/Header';
 import apiQuestions from '../services/apiQuestions';
+import '../styles/Game.css';
 
 const INDEX_RANDOM = 0.5;
 
@@ -11,6 +12,7 @@ class Game extends Component {
     indexQuestion: 0,
     answers: [],
     correctAnswer: '',
+    renderColor: false,
   };
 
   async componentDidMount() {
@@ -32,8 +34,14 @@ class Game extends Component {
   // https://teamtreehouse.com/community/return-mathrandom05
   shuffleArray = (answers) => answers.sort(() => Math.random() - INDEX_RANDOM);
 
+  handleClick = () => {
+    this.setState({ renderColor: true });
+  };
+
+  changeColor = (isCorrect) => (isCorrect ? 'correctAnswer' : 'incorrectAnswer');
+
   render() {
-    const { questions, answers, correctAnswer, indexQuestion } = this.state;
+    const { questions, answers, correctAnswer, indexQuestion, renderColor } = this.state;
     const question = questions[indexQuestion];
     return (
       <section>
@@ -49,8 +57,11 @@ class Game extends Component {
                     <button
                       type="button"
                       key={ answer }
+                      className={ renderColor
+                        && this.changeColor(answer === correctAnswer) }
                       data-testid={ answer === correctAnswer
                         ? 'correct-answer' : `wrong-answer-${index}` }
+                      onClick={ () => this.handleClick(answer, correctAnswer) }
                     >
                       {answer}
                     </button>
