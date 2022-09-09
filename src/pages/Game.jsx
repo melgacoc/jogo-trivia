@@ -1,5 +1,6 @@
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
+import Clock from '../components/Clock';
 import Header from '../components/Header';
 import apiQuestions from '../services/apiQuestions';
 import '../styles/Game.css';
@@ -13,6 +14,7 @@ class Game extends Component {
     answers: [],
     correctAnswer: '',
     renderColor: false,
+    timeIsExpired: false,
   };
 
   async componentDidMount() {
@@ -40,12 +42,18 @@ class Game extends Component {
 
   changeColor = (isCorrect) => (isCorrect ? 'correctAnswer' : 'incorrectAnswer');
 
+  handleExpired = () => {
+    this.setState({ timeIsExpired: true });
+  };
+
   render() {
-    const { questions, answers, correctAnswer, indexQuestion, renderColor } = this.state;
+    const { questions, answers, correctAnswer, indexQuestion, renderColor,
+      timeIsExpired } = this.state;
     const question = questions[indexQuestion];
     return (
       <section>
         <Header />
+        <Clock handleExpired={ this.handleExpired } />
         {
           question && (
             <div>
@@ -62,6 +70,7 @@ class Game extends Component {
                       data-testid={ answer === correctAnswer
                         ? 'correct-answer' : `wrong-answer-${index}` }
                       onClick={ () => this.handleClick(answer, correctAnswer) }
+                      disabled={ timeIsExpired }
                     >
                       {answer}
                     </button>
