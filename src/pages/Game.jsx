@@ -58,7 +58,8 @@ class Game extends Component {
                       type="button"
                       key={ answer }
                       className={ renderColor
-                        && this.changeColor(answer === correctAnswer) }
+                        ? this.changeColor(answer === correctAnswer)
+                        : undefined }
                       data-testid={ answer === correctAnswer
                         ? 'correct-answer' : `wrong-answer-${index}` }
                       onClick={ () => this.handleClick(answer, correctAnswer) }
