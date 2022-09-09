@@ -5,7 +5,7 @@ import apiGravatar from '../services/apiGravatar';
 
 class Header extends Component {
   state = {
-    img: false,
+    img: '',
   };
 
   componentDidMount() {
