@@ -13,7 +13,7 @@ class Game extends Component {
     indexQuestion: 0,
     answers: [],
     correctAnswer: '',
-    renderColor: false,
+    givenAnswer: false,
     timeIsExpired: false,
   };
 
@@ -41,7 +41,7 @@ class Game extends Component {
   shuffleArray = (answers) => answers.sort(() => Math.random() - INDEX_RANDOM);
 
   handleClick = () => {
-    this.setState({ renderColor: true });
+    this.setState({ givenAnswer: true });
   };
 
   changeColor = (isCorrect) => (isCorrect ? 'correctAnswer' : 'incorrectAnswer');
@@ -50,8 +50,24 @@ class Game extends Component {
     this.setState({ timeIsExpired: true });
   };
 
+  nextQuestion = () => {
+    this.setState((prevState) => {
+      const indexQuestion = prevState.indexQuestion + 1;
+      const answers = [
+        prevState.questions[indexQuestion].correct_answer,
+        ...prevState.questions[indexQuestion].incorrect_answers,
+      ];
+      return {
+        givenAnswer: false,
+        indexQuestion,
+        answers: this.shuffleArray(answers),
+        correctAnswer: prevState.questions[indexQuestion].correct_answer,
+      };
+    });
+  };
+
   render() {
-    const { questions, answers, correctAnswer, indexQuestion, renderColor,
+    const { questions, answers, correctAnswer, indexQuestion, givenAnswer,
       timeIsExpired } = this.state;
     const question = questions[indexQuestion];
     return (
@@ -69,7 +85,7 @@ class Game extends Component {
                     <button
                       type="button"
                       key={ answer }
-                      className={ renderColor
+                      className={ givenAnswer
                         ? this.changeColor(answer === correctAnswer)
                         : undefined }
                       data-testid={ answer === correctAnswer
@@ -80,6 +96,17 @@ class Game extends Component {
                       {answer}
                     </button>
                   ))
+                }
+                {
+                  givenAnswer && (
+                    <button
+                      type="button"
+                      data-testid="btn-next"
+                      onClick={ this.nextQuestion }
+                    >
+                      Next
+                    </button>
+                  )
                 }
               </div>
             </div>
