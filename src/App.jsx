@@ -1,15 +1,12 @@
-import React from 'react';
-import { Route, Switch } from 'react-router-dom';
-import Login from './pages/Login';
-import Settings from './pages/Settings';
+import React, { Component } from 'react';
+import Routes from './Routes';
 
-export default function App() {
-  return (
-    <div>
-      <Switch>
-        <Route exact path="/settings" component={ Settings } />
-        <Route exact path="/" render={ (props) => <Login { ...props } /> } />
-      </Switch>
-    </div>
-  );
+class App extends Component {
+  render() {
+    return (
+      <Routes />
+    );
+  }
 }
+
+export default App;
