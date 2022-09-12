@@ -30,7 +30,7 @@ class Feedback extends Component {
         <button
           type="button"
           data-testid="btn-play-again"
-          onClick={ this.buttonPlayAgain() }
+          onClick={ this.buttonPlayAgain }
         >
           Play Again
         </button>

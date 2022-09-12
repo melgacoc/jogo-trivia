@@ -85,7 +85,7 @@ class Game extends Component {
     this.setState(({ indexQuestion, questions }) => {
       if (indexQuestion === LENGTH_QUESTIONS) {
         const { history } = this.props;
-        history.push('/feedback');
+        return history.push('/feedback');
       }
       const currentIndex = indexQuestion + 1;
       const answers = [questions[currentIndex].correct_answer,
