@@ -3,7 +3,7 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import Clock from '../components/Clock';
 import Header from '../components/Header';
-import { resetTime } from '../redux/actions';
+import { addToScoreAction, resetTime } from '../redux/actions';
 import apiQuestions from '../services/apiQuestions';
 import '../styles/Game.css';
 
@@ -31,7 +31,10 @@ class Game extends Component {
       const { history } = this.props;
       history.push('/');
     } else {
-      const answers = [questions[0].correct_answer, ...questions[0].incorrect_answers];
+      const answers = [
+        questions[0].correct_answer,
+        ...questions[0].incorrect_answers,
+      ];
       this.setState({
         questions,
         answers: this.shuffleArray(answers),
@@ -43,8 +46,26 @@ class Game extends Component {
   // https://teamtreehouse.com/community/return-mathrandom05
   shuffleArray = (answers) => answers.sort(() => Math.random() - INDEX_RANDOM);
 
-  handleClick = () => {
-    this.setState({ givenAnswer: true });
+  handleClick = (answer, correctAnswer, difficulty) => {
+    const hard = 3;
+    const medium = 2;
+    const easy = 1;
+    const { dispatch } = this.props;
+    const { currentCount } = this.state;
+    if (answer === correctAnswer) {
+      const INITIAL_POINT = 10;
+      switch (difficulty) {
+      case 'hard':
+        dispatch(addToScoreAction(INITIAL_POINT + currentCount * hard));
+        break;
+      case 'medium':
+        dispatch(addToScoreAction(INITIAL_POINT + currentCount * medium));
+        break;
+      default:
+        dispatch(addToScoreAction(INITIAL_POINT + currentCount * easy));
+      }
+    }
+    this.setState({ timeIsExpired: true, givenAnswer: true });
   };
 
   changeColor = (isCorrect) => (isCorrect ? 'correctAnswer' : 'incorrectAnswer');
@@ -69,57 +90,68 @@ class Game extends Component {
         resetTime: true,
         indexQuestion: currentIndex,
         answers: this.shuffleArray(answers),
-        correctAnswer: questions[currentIndex].correct_answer,
+        correctAnswer: prevState.questions[indexQuestion].correct_answer,
+        timeIsExpired: false,
       };
     });
   };
 
   render() {
-    const { questions, answers, correctAnswer, indexQuestion, givenAnswer,
-      timeIsExpired } = this.state;
+    const {
+      questions,
+      answers,
+      correctAnswer,
+      indexQuestion,
+      givenAnswer,
+      timeIsExpired,
+    } = this.state;
     const question = questions[indexQuestion];
     return (
       <section>
         <Header />
-        <Clock handleExpired={ this.handleExpired } />
-        {
-          question && (
-            <div>
-              <p data-testid="question-category">{question.category}</p>
-              <p data-testid="question-text">{question.question}</p>
-              <div data-testid="answer-options">
-                {
-                  answers.map((answer, index) => (
-                    <button
-                      type="button"
-                      key={ answer }
-                      className={ givenAnswer
-                        ? this.changeColor(answer === correctAnswer)
-                        : undefined }
-                      data-testid={ answer === correctAnswer
-                        ? 'correct-answer' : `wrong-answer-${index}` }
-                      onClick={ () => this.handleClick(answer, correctAnswer) }
-                      disabled={ timeIsExpired }
-                    >
-                      {answer}
-                    </button>
-                  ))
-                }
-                {
-                  givenAnswer && (
-                    <button
-                      type="button"
-                      data-testid="btn-next"
-                      onClick={ this.nextQuestion }
-                    >
-                      Next
-                    </button>
-                  )
-                }
-              </div>
+        <Clock
+          handleExpired={ this.handleExpired }
+          updateClock={ this.updateClock }
+        />
+        {question && (
+          <div>
+            <p data-testid="question-category">{question.category}</p>
+            <p data-testid="question-text">{question.question}</p>
+            <div data-testid="answer-options">
+              {answers.map((answer, index) => (
+                <button
+                  type="button"
+                  key={ answer }
+                  className={
+                    givenAnswer
+                      ? this.changeColor(answer === correctAnswer)
+                      : undefined
+                  }
+                  data-testid={
+                    answer === correctAnswer
+                      ? 'correct-answer'
+                      : `wrong-answer-${index}`
+                  }
+                  onClick={
+                    () => this.handleClick(answer, correctAnswer, question.difficulty)
+                  }
+                  disabled={ timeIsExpired }
+                >
+                  {answer}
+                </button>
+              ))}
+              {givenAnswer && (
+                <button
+                  type="button"
+                  data-testid="btn-next"
+                  onClick={ this.nextQuestion }
+                >
+                  Next
+                </button>
+              )}
             </div>
-          )
-        }
+          </div>
+        )}
       </section>
     );
   }
@@ -132,4 +164,8 @@ Game.propTypes = {
   dispatch: PropTypes.func.isRequired,
 };
 
-export default connect()(Game);
+const mapDispatchToProps = (dispatch) => ({
+  dispatch,
+});
+
+export default connect(null, mapDispatchToProps)(Game);
