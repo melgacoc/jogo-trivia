@@ -17,7 +17,11 @@ class Game extends Component {
     timeIsExpired: false,
   };
 
-  async componentDidMount() {
+  componentDidMount() {
+    this.getQuestions();
+  }
+
+  getQuestions = async () => {
     const questions = await apiQuestions();
     if (questions === undefined || !questions.length) {
       localStorage.removeItem('token');
@@ -31,7 +35,7 @@ class Game extends Component {
         correctAnswer: questions[0].correct_answer,
       });
     }
-  }
+  };
 
   // https://teamtreehouse.com/community/return-mathrandom05
   shuffleArray = (answers) => answers.sort(() => Math.random() - INDEX_RANDOM);
