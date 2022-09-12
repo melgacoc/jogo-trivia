@@ -18,7 +18,7 @@ class Ranking extends Component {
 
   render() {
     const { isRedirect, ranking } = this.state;
-    // const rankingSort = ranking.sort((a, b) => b.score - a.score);
+    const rankingSort = ranking.sort((a, b) => b.score - a.score);
     if (isRedirect) {
       return <Redirect to="/" />;
     }
@@ -33,7 +33,7 @@ class Ranking extends Component {
         >
           Home
         </button>
-        {/* {
+        {
           rankingSort.map(({ name, score, picture }, index) => (
             <div key={ index }>
               <img src={ picture } alt="Avatar" />
@@ -41,7 +41,7 @@ class Ranking extends Component {
               <p data-testid={ `player-score-${index}` }>{score}</p>
             </div>
           ))
-        } */}
+        }
       </section>
     );
   }
