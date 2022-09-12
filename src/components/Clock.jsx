@@ -56,6 +56,7 @@ class Clock extends Component {
 Clock.propTypes = {
   handleExpired: PropTypes.func.isRequired,
   dispatch: PropTypes.func.isRequired,
+  updateClock: PropTypes.func.isRequired,
   itToResetTime: PropTypes.bool.isRequired,
 };
 
