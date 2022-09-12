@@ -22,7 +22,7 @@ class Clock extends Component {
 
   timer = () => {
     const { currentCount } = this.state;
-    const { handleExpired } = this.props;
+    const { handleExpired, updateClock } = this.props;
     this.setState({
       currentCount: currentCount === 0 ? 0 : currentCount - DECREMENT_COUNT_SECOND,
     });
@@ -32,6 +32,7 @@ class Clock extends Component {
     if (currentCount === 1) {
       handleExpired();
     }
+    updateClock(currentCount);
   };
 
   getReset = () => {

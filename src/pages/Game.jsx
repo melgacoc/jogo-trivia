@@ -18,6 +18,7 @@ class Game extends Component {
     correctAnswer: '',
     givenAnswer: false,
     timeIsExpired: false,
+    currentCount: 30,
   };
 
   componentDidMount() {
@@ -70,6 +71,10 @@ class Game extends Component {
 
   changeColor = (isCorrect) => (isCorrect ? 'correctAnswer' : 'incorrectAnswer');
 
+  updateClock = (currentCount) => {
+    this.setState({ currentCount });
+  };
+
   handleExpired = () => {
     this.setState({ timeIsExpired: true });
   };
@@ -90,7 +95,7 @@ class Game extends Component {
         resetTime: true,
         indexQuestion: currentIndex,
         answers: this.shuffleArray(answers),
-        correctAnswer: prevState.questions[indexQuestion].correct_answer,
+        correctAnswer: questions[indexQuestion].correct_answer,
         timeIsExpired: false,
       };
     });
@@ -110,8 +115,8 @@ class Game extends Component {
       <section>
         <Header />
         <Clock
-          handleExpired={ this.handleExpired }
           updateClock={ this.updateClock }
+          handleExpired={ this.handleExpired }
         />
         {question && (
           <div>
