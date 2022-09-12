@@ -95,7 +95,7 @@ class Game extends Component {
         resetTime: true,
         indexQuestion: currentIndex,
         answers: this.shuffleArray(answers),
-        correctAnswer: questions[indexQuestion].correct_answer,
+        correctAnswer: questions[currentIndex].correct_answer,
         timeIsExpired: false,
       };
     });
