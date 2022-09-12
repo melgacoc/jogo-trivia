@@ -7,14 +7,19 @@ import Header from '../components/Header';
 class Feedback extends Component {
   showMessageFeedback = () => {
     const TRES = 3;
-    const { score } = this.props;
-    if (score >= TRES) return 'Well Done!';
+    const { assertions } = this.props;
+    if (assertions >= TRES) return 'Well Done!';
     return 'Could be better...';
   };
 
   buttonPlayAgain = () => {
     const { history } = this.props;
     history.push('/');
+  };
+
+  buttonPlayRanking = () => {
+    const { history } = this.props;
+    history.push('/ranking');
   };
 
   render() {
@@ -34,6 +39,13 @@ class Feedback extends Component {
         >
           Play Again
         </button>
+        <button
+          type="button"
+          data-testid="btn-ranking"
+          onClick={ this.buttonPlayRanking }
+        >
+          Ranking
+        </button>
       </div>
     );
   }
@@ -44,8 +56,8 @@ Feedback.propTypes = {
   assertions: number,
 }.isRequired;
 
-const mapStateToProps = ({ playReducer }) => ({
-  ...playReducer,
+const mapStateToProps = ({ player }) => ({
+  ...player,
 });
 
 export default connect(mapStateToProps)(Feedback);
