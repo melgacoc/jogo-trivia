@@ -1,11 +1,14 @@
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
+import { connect } from 'react-redux';
 import Clock from '../components/Clock';
 import Header from '../components/Header';
+import { resetTime } from '../redux/actions';
 import apiQuestions from '../services/apiQuestions';
 import '../styles/Game.css';
 
 const INDEX_RANDOM = 0.5;
+const LENGTH_QUESTIONS = 4;
 
 class Game extends Component {
   state = {
@@ -51,17 +54,22 @@ class Game extends Component {
   };
 
   nextQuestion = () => {
-    this.setState((prevState) => {
-      const indexQuestion = prevState.indexQuestion + 1;
-      const answers = [
-        prevState.questions[indexQuestion].correct_answer,
-        ...prevState.questions[indexQuestion].incorrect_answers,
-      ];
+    const { dispatch } = this.props;
+    dispatch(resetTime(true));
+    this.setState(({ indexQuestion, questions }) => {
+      if (indexQuestion === LENGTH_QUESTIONS) {
+        const { history } = this.props;
+        history.push('/feedback');
+      }
+      const currentIndex = indexQuestion + 1;
+      const answers = [questions[currentIndex].correct_answer,
+        ...questions[currentIndex].incorrect_answers];
       return {
         givenAnswer: false,
-        indexQuestion,
+        resetTime: true,
+        indexQuestion: currentIndex,
         answers: this.shuffleArray(answers),
-        correctAnswer: prevState.questions[indexQuestion].correct_answer,
+        correctAnswer: questions[currentIndex].correct_answer,
       };
     });
   };
@@ -121,6 +129,7 @@ Game.propTypes = {
   history: PropTypes.shape({
     push: PropTypes.func.isRequired,
   }).isRequired,
+  dispatch: PropTypes.func.isRequired,
 };
 
-export default Game;
+export default connect()(Game);
