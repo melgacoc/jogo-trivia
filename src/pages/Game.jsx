@@ -101,6 +101,12 @@ class Game extends Component {
     });
   };
 
+  decodeEntity = (inputStr) => {
+    const textarea = document.createElement('textarea');
+    textarea.innerHTML = inputStr;
+    return textarea.value;
+  };
+
   render() {
     const {
       questions,
@@ -121,7 +127,7 @@ class Game extends Component {
         {question && (
           <div>
             <p data-testid="question-category">{question.category}</p>
-            <p data-testid="question-text">{question.question}</p>
+            <p data-testid="question-text">{this.decodeEntity(question.question)}</p>
             <div data-testid="answer-options">
               {answers.map((answer, index) => (
                 <button
@@ -142,7 +148,7 @@ class Game extends Component {
                   }
                   disabled={ timeIsExpired }
                 >
-                  {answer}
+                  {this.decodeEntity(answer)}
                 </button>
               ))}
               {givenAnswer && (
