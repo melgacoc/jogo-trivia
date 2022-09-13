@@ -48,7 +48,7 @@ class Clock extends Component {
       this.getReset();
     }
     return (
-      <div>{currentCount}</div>
+      <div data-testid="timer-clock">{currentCount}</div>
     );
   }
 }

@@ -1,4 +1,4 @@
-import { screen } from '@testing-library/react';
+import { screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import React from 'react';
 import App from '../App';
@@ -28,11 +28,18 @@ describe('Testes para a página de Game', () => {
   });
 
   test('A página deve conter uma categoria, a pegunta e as repostas da questão', () => {
-    // expect(screen.getByTestId('question-category')).toBeInTheDocument();
+    const { correct_answer: correctAnswer, 
+    incorrect_answers: incorrectAnswers } = questionsMock[0];
+    
+    expect(screen.getByTestId('question-category')).toBeInTheDocument();
     expect(screen.getByTestId('question-text')).toBeInTheDocument();
-    // expect(screen.getByTestId('correct-answer')).toBeInTheDocument();
-    // expect(screen.getByTestId('wrong-answer-0')).toBeInTheDocument();
-    // expect(screen.getByTestId('wrong-answer-1')).toBeInTheDocument();
-    // expect(screen.getByTestId('wrong-answer-2')).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: correctAnswer })).toBeInTheDocument();
+    incorrectAnswers.forEach((answer) => {
+      expect(screen.getByRole('button', { name: answer })).toBeInTheDocument();
+    });
+  });
+  
+  test('Os botões de repostas são desabilitados após 30 segundos', async () => {
+    await waitFor(() => expect(screen.getByTestId('timer-clock').innerHTML).toBe('29'));
   });
 });
