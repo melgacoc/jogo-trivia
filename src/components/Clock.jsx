@@ -24,9 +24,9 @@ class Clock extends Component {
     const { currentCount } = this.state;
     const { handleExpired, updateClock } = this.props;
     this.setState({
-      currentCount: currentCount === 0 ? 0 : currentCount - DECREMENT_COUNT_SECOND,
+      currentCount: currentCount - DECREMENT_COUNT_SECOND,
     });
-    if (currentCount < DECREMENT_COUNT_SECOND) {
+    if (currentCount <= DECREMENT_COUNT_SECOND) {
       clearInterval(this.intervalId);
     }
     if (currentCount === 1) {

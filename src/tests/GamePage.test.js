@@ -46,6 +46,6 @@ describe('Testes para a página de Game', () => {
   });
 
   test('Os botões de reposas são desabilitados após 30 segundos', async () => {
-    await waitFor(() => expect(screen.getByTestId('correct-answer')).toBeDisabled(), { timeout: 32000 });     
+    await waitFor(() => expect(screen.getByTestId('correct-answer')).toBeDisabled(), { timeout: 32000 });
   });
 });
