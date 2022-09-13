@@ -14,6 +14,8 @@ const questions = {
   results: questionsMock,
 }
 
+jest.setTimeout(40000);
+
 describe('Testes para a página de Game', () => {
   beforeEach(() => {
     global.fetch = jest.fn(() => Promise.resolve({
@@ -39,7 +41,11 @@ describe('Testes para a página de Game', () => {
     });
   });
   
-  test('Os botões de repostas são desabilitados após 30 segundos', async () => {
+  test('Diminui o tempo do temporizador', async () => {
     await waitFor(() => expect(screen.getByTestId('timer-clock').innerHTML).toBe('29'));
+  });
+
+  test('Os botões de reposas são desabilitados após 30 segundos', async () => {
+    await waitFor(() => expect(screen.getByTestId('correct-answer')).toBeDisabled(), { timeout: 32000 });     
   });
 });
