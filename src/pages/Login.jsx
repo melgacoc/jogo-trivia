@@ -2,7 +2,7 @@ import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import ConfigurationButton from '../components/ConfigurationButton';
-import { userAction } from '../redux/actions';
+import { resetScore, userAction } from '../redux/actions';
 import apiToken from '../services/apiToken';
 
 class Login extends Component {
@@ -11,6 +11,11 @@ class Login extends Component {
     name: '',
     isDisabled: true,
   };
+
+  componentDidMount() {
+    const { dispatch } = this.props;
+    dispatch(resetScore());
+  }
 
   handleChange = ({ target: { name, value } }) => {
     this.setState({

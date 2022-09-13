@@ -13,10 +13,6 @@ class Ranking extends Component {
   }
 
   handleClick = () => {
-    const rankings = JSON.parse(localStorage.getItem('ranking'));
-    const lastPlayer = { ...rankings[rankings.length - 1], score: 0 };
-    rankings.splice(rankings.length - 1, 1, lastPlayer);
-    localStorage.setItem('ranking', JSON.stringify(rankings));
     this.setState({ isRedirect: true });
   };
 

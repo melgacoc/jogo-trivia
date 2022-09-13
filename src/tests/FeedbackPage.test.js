@@ -1,8 +1,11 @@
-import { findByTestId, screen } from '@testing-library/react';
+import { screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import React from 'react';
 import App from '../App';
-import { BTN_NEXT, BTN_PLAY, CORRECT_ANSWER, EMAIL_INPUT, EMAIL_TYPE, NAME_INPUT, NAME_TYPE } from './helpers/constants';
+import {
+  BTN_NEXT, BTN_PLAY, CORRECT_ANSWER, EMAIL_INPUT, EMAIL_TYPE,
+  FEEDBACK_TEXT, FEEDBACK_TOTAL_QUESTION, FEEDBACK_TOTAL_SCORE, NAME_INPUT, NAME_TYPE
+} from './helpers/constants';
 import questionsMock from './helpers/questionsMock';
 import renderWithRouterAndRedux from './helpers/renderWithRouterAndRedux';
 
@@ -14,8 +17,8 @@ const questions = {
 const correctAnswers = ['John', 'Mitochondria', 'False', 'Hopkins', 'Restoration'];
 const wrongAnswers = ['Paul', 'Ribosome', 'True', 'Smith', 'Restoration'];
 
-describe('Feedback page', () => {
-  beforeEach(async () => {
+describe('Testes para a página de Feedback', () => {
+  beforeEach(() => {
     global.fetch = jest.fn(() => Promise.resolve({
       json: () => Promise.resolve(questions),
     }));
@@ -33,9 +36,9 @@ describe('Feedback page', () => {
       userEvent.click(screen.getByTestId(BTN_NEXT));
     });
     
-    expect(screen.getByTestId('feedback-total-score').innerHTML).toBe('100');
-    expect(screen.getByTestId('feedback-total-question').innerHTML).toBe('1');
-    expect(screen.getByTestId('feedback-text').innerHTML).toBe('Could be better...');
+    expect(screen.getByTestId(FEEDBACK_TOTAL_SCORE).innerHTML).toBe('100');
+    expect(screen.getByTestId(FEEDBACK_TOTAL_QUESTION).innerHTML).toBe('1');
+    expect(screen.getByTestId(FEEDBACK_TEXT).innerHTML).toBe('Could be better...');
   });
   
   describe('Casos de respostas corretas', () => {
