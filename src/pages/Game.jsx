@@ -80,10 +80,21 @@ class Game extends Component {
   };
 
   nextQuestion = () => {
-    const { dispatch } = this.props;
+    const { dispatch, name, gravatarEmail, score } = this.props;
     dispatch(resetTime(true));
     this.setState(({ indexQuestion, questions }) => {
       if (indexQuestion === LENGTH_QUESTIONS) {
+        const userScore = {
+          name,
+          score,
+          gravatarEmail,
+        };
+        const rankings = JSON.parse(localStorage.getItem('ranking'));
+        if (rankings) {
+          localStorage.setItem('ranking', JSON.stringify([...rankings, userScore]));
+        } else {
+          localStorage.setItem('ranking', JSON.stringify([userScore]));
+        }
         const { history } = this.props;
         return history.push('/feedback');
       }
@@ -173,10 +184,18 @@ Game.propTypes = {
     push: PropTypes.func.isRequired,
   }).isRequired,
   dispatch: PropTypes.func.isRequired,
+  name: PropTypes.string.isRequired,
+  gravatarEmail: PropTypes.string.isRequired,
+  score: PropTypes.number.isRequired,
+
 };
+
+const mapStateToProps = ({ player }) => ({
+  ...player,
+});
 
 const mapDispatchToProps = (dispatch) => ({
   dispatch,
 });
 
-export default connect(null, mapDispatchToProps)(Game);
+export default connect(mapStateToProps, mapDispatchToProps)(Game);
